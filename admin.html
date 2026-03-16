@@ -207,48 +207,28 @@
 
   <div class="toast" id="toast"></div>
 
-  <!-- FIREBASE -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getFirestore, collection, addDoc, deleteDoc, doc,
-      onSnapshot, query, orderBy, serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <!-- REST API - sin SDK, sin problemas de permisos -->
+  <script>
+    const PROJECT_ID = 'electroservice-3991b';
+    const API_KEY    = 'AIzaSyDrQMOo86Vu0e5B2wedQswWQzkI5gZDzMA';
+    const BASE_URL   = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDrQMOo86Vu0e5B2wedQswWQzkI5gZDzMA",
-      authDomain: "electroservice-3991b.firebaseapp.com",
-      projectId: "electroservice-3991b",
-      storageBucket: "electroservice-3991b.firebasestorage.app",
-      messagingSenderId: "176376814986",
-      appId: "1:176376814986:web:7ccab6e89712051638fc73"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
-
-    // ── CREDENCIALES HASHEADAS (SHA-256) ──
-    // Usuario: admin  |  Contraseña: electroservice2025
-    // Para cambiarlas: https://emn178.github.io/online-tools/sha256.html
     const CREDS = {
       user: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
       pass: '717c26e88f94d2b2f13a2c5457cc2b77ac11c2b18f62b78ea7294d47b3acbe94'
     };
-
-    const SESSION_KEY = 'eso_admin_session';
+    const SESSION_KEY      = 'eso_admin_session';
     const SESSION_DURATION = 2 * 60 * 60 * 1000;
     let failedAttempts = 0;
-    let lockUntil = 0;
+    let lockUntil      = 0;
 
     async function sha256(str) {
       const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
     }
-
     function createSession() {
-      const token = (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2));
       const exp = Date.now() + SESSION_DURATION;
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({token, expires: exp}));
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ expires: exp }));
       return exp;
     }
     function getSession() {
@@ -260,7 +240,45 @@
     }
     function isLoggedIn() { return !!getSession(); }
 
-    window.doLogin = async function() {
+    // ── FIRESTORE REST ──
+    function toDoc(data) {
+      const fields = {};
+      for (const [k, v] of Object.entries(data)) {
+        fields[k] = { stringValue: String(v) };
+      }
+      return { fields };
+    }
+    function fromDoc(doc) {
+      const out = { id: doc.name.split('/').pop(), _created: doc.createTime || '' };
+      for (const [k, v] of Object.entries(doc.fields || {})) {
+        out[k] = v.stringValue ?? v.integerValue ?? '';
+      }
+      return out;
+    }
+    async function fetchProducts() {
+      const res  = await fetch(`${BASE_URL}/products?key=${API_KEY}&pageSize=200`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Error al leer');
+      const docs = data.documents || [];
+      return docs.map(fromDoc).sort((a,b) => b._created.localeCompare(a._created));
+    }
+    async function createProduct(fields) {
+      const res = await fetch(`${BASE_URL}/products?key=${API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(toDoc(fields))
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Error al escribir');
+      return data;
+    }
+    async function removeProduct(id) {
+      const res = await fetch(`${BASE_URL}/products/${id}?key=${API_KEY}`, { method: 'DELETE' });
+      if (!res.ok) { const d = await res.json(); throw new Error(d.error?.message || 'Error'); }
+    }
+
+    // ── LOGIN ──
+    async function doLogin() {
       if (Date.now() < lockUntil) {
         const s = Math.ceil((lockUntil - Date.now()) / 1000);
         showError(`⏳ Bloqueado. Esperá ${s} segundos.`); return;
@@ -275,8 +293,7 @@
       if (uh === CREDS.user && ph === CREDS.pass) {
         failedAttempts = 0;
         document.getElementById('loginError').classList.remove('show');
-        const exp = createSession();
-        showAdminPanel(exp);
+        showAdminPanel(createSession());
       } else {
         failedAttempts++;
         if (failedAttempts >= 5)      lockUntil = Date.now() + 120000;
@@ -285,125 +302,97 @@
         document.getElementById('loginPass').value = '';
         showError(`❌ Credenciales incorrectas. Intento ${failedAttempts}/5`);
       }
-    };
-
-    window.doLogout = function() {
+    }
+    function doLogout() {
       sessionStorage.removeItem(SESSION_KEY);
       document.getElementById('adminPanel').style.display = 'none';
       document.getElementById('loginScreen').style.display = 'flex';
       document.getElementById('loginUser').value = '';
       document.getElementById('loginPass').value = '';
       document.getElementById('loginError').classList.remove('show');
-    };
-
+    }
     function showError(msg) {
       const el = document.getElementById('loginError');
       el.textContent = msg; el.classList.add('show');
     }
 
-    let unsubscribe = null;
-
     function showAdminPanel(expTs) {
       document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminPanel').style.display = 'block';
-      const expDate = new Date(expTs);
+      document.getElementById('adminPanel').style.display  = 'block';
       document.getElementById('statSession').textContent =
-        expDate.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'});
-      startProductsListener();
+        new Date(expTs).toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' });
+      loadProducts();
     }
 
-    function startProductsListener() {
-      if (unsubscribe) unsubscribe();
-      const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
-      unsubscribe = onSnapshot(q, snap => {
-        const products = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    async function loadProducts() {
+      document.getElementById('adminProductList').innerHTML =
+        '<div style="text-align:center;padding:30px"><div class="spinner"></div></div>';
+      try {
+        const products = await fetchProducts();
         document.getElementById('statTotal').textContent = products.length;
         renderAdminProducts(products);
-      }, err => {
-        console.error(err);
+      } catch(e) {
         document.getElementById('adminProductList').innerHTML =
-          `<div class="empty-admin"><p style="color:var(--danger)">⚠️ Error al conectar con Firebase. Verificá la configuración.</p></div>`;
-      });
+          `<div class="empty-admin"><p style="color:var(--danger)">⚠️ ${e.message}</p></div>`;
+      }
     }
 
     function renderAdminProducts(products) {
-      const container = document.getElementById('adminProductList');
-      if (!products.length) {
-        container.innerHTML = `<div class="empty-admin"><p>No hay artículos publicados todavía.</p></div>`; return;
-      }
-      container.innerHTML = `
-        <table class="products-table">
-          <thead><tr><th style="width:60px"></th><th>Artículo</th><th>Precio</th><th style="width:110px"></th></tr></thead>
-          <tbody>
-            ${products.map(p => `
-              <tr>
-                <td><div class="pt-thumb">${p.img?`<img src="${p.img}" alt="${p.name}"/>`:'📦'}</div></td>
-                <td><div class="pt-name">${p.name}</div><div class="pt-desc">${p.desc||'–'}</div></td>
-                <td><span class="pt-price">$${Number(p.price).toLocaleString('es-AR')}</span></td>
-                <td><button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑 Eliminar</button></td>
-              </tr>`).join('')}
-          </tbody>
-        </table>`;
+      const c = document.getElementById('adminProductList');
+      if (!products.length) { c.innerHTML = `<div class="empty-admin"><p>No hay artículos todavía.</p></div>`; return; }
+      c.innerHTML = `<table class="products-table">
+        <thead><tr><th style="width:60px"></th><th>Artículo</th><th>Precio</th><th style="width:110px"></th></tr></thead>
+        <tbody>${products.map(p=>`
+          <tr>
+            <td><div class="pt-thumb">${p.img?`<img src="${p.img}" alt="${p.name}"/>`:'📦'}</div></td>
+            <td><div class="pt-name">${p.name}</div><div class="pt-desc">${p.desc||'–'}</div></td>
+            <td><span class="pt-price">$${Number(p.price).toLocaleString('es-AR')}</span></td>
+            <td><button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑 Eliminar</button></td>
+          </tr>`).join('')}
+        </tbody></table>`;
     }
 
-    window.deleteProduct = async function(id) {
-      if (!isLoggedIn()) { window.doLogout(); return; }
+    async function deleteProduct(id) {
+      if (!isLoggedIn()) { doLogout(); return; }
       if (!confirm('¿Eliminar este artículo?')) return;
-      try {
-        await deleteDoc(doc(db, 'products', id));
-        showToast('🗑 Artículo eliminado');
-      } catch(e) { showToast('❌ Error al eliminar'); }
-    };
+      try { await removeProduct(id); showToast('🗑 Artículo eliminado'); loadProducts(); }
+      catch(e) { showToast('❌ ' + e.message); }
+    }
 
-    window.addProduct = async function() {
-      if (!isLoggedIn()) { window.doLogout(); return; }
-      const name  = document.getElementById('pName').value.trim();
-      const desc  = document.getElementById('pDesc').value.trim();
-      const price = document.getElementById('pPrice').value.trim();
+    async function addProduct() {
+      if (!isLoggedIn()) { doLogout(); return; }
+      const name    = document.getElementById('pName').value.trim();
+      const desc    = document.getElementById('pDesc').value.trim();
+      const price   = document.getElementById('pPrice').value.trim();
       const preview = document.getElementById('imgPreview');
-      const hasImg = preview.style.display !== 'none';
+      const hasImg  = preview.style.display !== 'none';
       if (!name || !price) { showToast('⚠️ Completá nombre y precio'); return; }
+      if (hasImg && preview.src.length > 900000) {
+        showToast('⚠️ Imagen demasiado grande. Usá una foto más chica.'); return;
+      }
       const btn = document.getElementById('btnPublish');
       btn.textContent = 'Publicando...'; btn.disabled = true;
       try {
-        await addDoc(collection(db, 'products'), {
-          name, desc, price,
-          img: hasImg ? preview.src : '',
-          createdAt: serverTimestamp()
-        });
-        window.clearForm();
-        showToast('✅ Artículo publicado — visible globalmente');
-      } catch(e) { showToast('❌ Error al publicar. Verificá Firebase.'); }
+        await createProduct({ name, desc, price, img: hasImg ? preview.src : '' });
+        clearForm(); showToast('✅ Artículo publicado — visible en todo el mundo'); loadProducts();
+      } catch(e) { showToast('❌ ' + e.message); }
       btn.textContent = '📦 Publicar artículo'; btn.disabled = false;
-    };
+    }
 
-    window.clearForm = function() {
+    function clearForm() {
       ['pName','pDesc','pPrice'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('pImg').value = '';
       document.getElementById('imgPreview').style.display = 'none';
       document.getElementById('uploadPlaceholder').style.display = 'block';
       document.getElementById('imgName').style.display = 'none';
-    };
+    }
 
-    // Auto-logout
-    setInterval(() => {
-      if (document.getElementById('adminPanel').style.display === 'block' && !isLoggedIn()) {
-        showToast('⏰ Sesión expirada.');
-        window.doLogout();
-      }
-    }, 60000);
-
-    // Restaurar sesión
-    const session = getSession();
-    if (session) showAdminPanel(session.expires);
-  </script>
-
-  <script>
-    window.togglePassVisibility = function() {
+    function togglePassVisibility() {
       const i = document.getElementById('loginPass');
       i.type = i.type === 'password' ? 'text' : 'password';
-    };
-    window.previewImage = function(e) {
+    }
+
+    function previewImage(e) {
       const file = e.target.files[0]; if (!file) return;
       const reader = new FileReader();
       reader.onload = ev => {
@@ -414,12 +403,23 @@
         n.textContent = '📎 ' + file.name; n.style.display = 'block';
       };
       reader.readAsDataURL(file);
-    };
+    }
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg; t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3500);
     }
+
+    setInterval(() => {
+      if (document.getElementById('adminPanel').style.display === 'block' && !isLoggedIn()) {
+        showToast('⏰ Sesión expirada.'); doLogout();
+      }
+    }, 60000);
+
+    // Restaurar sesión si existe
+    const _s = getSession();
+    if (_s) showAdminPanel(_s.expires);
   </script>
 </body>
 </html>

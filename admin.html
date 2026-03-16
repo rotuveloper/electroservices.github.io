@@ -7,226 +7,152 @@
   <title>Admin – ElectroService Oeste</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    :root{
-      --bg:#f5f7ff;--surface:#fff;--surface2:#edf0fb;
-      --blue:#2563eb;--blue-light:#3b82f6;--blue-soft:rgba(37,99,235,0.09);
-      --text:#1e293b;--text-muted:#64748b;--text-light:#94a3b8;
-      --border:rgba(37,99,235,0.12);--danger:#ef4444;
-      --radius:16px;--radius-sm:10px;
-      --shadow:0 4px 24px rgba(37,99,235,0.08);
-      --shadow-hover:0 12px 40px rgba(37,99,235,0.16);
-    }
+    :root{--bg:#f5f7ff;--surface:#fff;--surface2:#edf0fb;--blue:#2563eb;--blue-light:#3b82f6;--blue-soft:rgba(37,99,235,0.09);--text:#1e293b;--text-muted:#64748b;--text-light:#94a3b8;--border:rgba(37,99,235,0.12);--danger:#ef4444;--radius:16px;--radius-sm:10px;--shadow:0 4px 24px rgba(37,99,235,0.08);--shadow-hover:0 12px 40px rgba(37,99,235,0.16);}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
     body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
     #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#eef2ff 0%,#e0eafe 50%,#f5f7ff 100%);position:relative;overflow:hidden;}
-    .login-blob{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;}
-    .lb1{width:400px;height:400px;background:rgba(37,99,235,0.12);top:-60px;left:-80px;animation:bfloat 8s ease-in-out infinite;}
-    .lb2{width:300px;height:300px;background:rgba(8,145,178,0.09);bottom:-40px;right:-60px;animation:bfloat 10s ease-in-out infinite reverse;}
-    @keyframes bfloat{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(20px,-28px) scale(1.05);}66%{transform:translate(-14px,18px) scale(0.95);}}
-    .login-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(37,99,235,0.14);animation:fade-up .6s ease both;position:relative;z-index:2;}
-    @keyframes fade-up{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+    .lb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;}
+    .lb1{width:400px;height:400px;background:rgba(37,99,235,0.12);top:-60px;left:-80px;animation:bf 8s ease-in-out infinite;}
+    .lb2{width:300px;height:300px;background:rgba(8,145,178,0.09);bottom:-40px;right:-60px;animation:bf 10s ease-in-out infinite reverse;}
+    @keyframes bf{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(20px,-28px) scale(1.05);}66%{transform:translate(-14px,18px) scale(0.95);}}
+
+    .login-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(37,99,235,0.14);animation:fu .6s ease both;position:relative;z-index:2;}
+    @keyframes fu{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
     .login-logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);display:flex;align-items:center;gap:9px;margin-bottom:6px;}
     .login-logo span{color:var(--blue);}
-    .login-logo .dot{width:9px;height:9px;border-radius:50%;background:var(--blue);animation:pulse-dot 2s ease-in-out infinite;}
-    @keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.5);}50%{box-shadow:0 0 0 6px rgba(37,99,235,0);}}
-    .login-subtitle{font-size:0.88rem;color:var(--text-muted);margin-bottom:28px;}
-    .login-subtitle strong{color:var(--text);}
-    .form-group{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
-    .form-group label{font-size:0.76rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;}
-    .form-group input{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:0.97rem;padding:13px 16px;outline:none;transition:all .2s;width:100%;}
-    .form-group input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1);background:#fff;}
-    .input-wrap{position:relative;}
-    .input-wrap input{padding-right:44px;}
-    .toggle-pass{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-light);font-size:1rem;padding:4px;}
+    .login-logo .dot{width:9px;height:9px;border-radius:50%;background:var(--blue);animation:pd 2s ease-in-out infinite;}
+    @keyframes pd{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0.5);}50%{box-shadow:0 0 0 6px rgba(37,99,235,0);}}
+    .login-sub{font-size:0.88rem;color:var(--text-muted);margin-bottom:28px;}
+    .login-sub strong{color:var(--text);}
+    .fg{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
+    .fg label{font-size:0.76rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;}
+    .fg input{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:0.97rem;padding:13px 16px;outline:none;transition:all .2s;width:100%;}
+    .fg input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1);background:#fff;}
+    .iw{position:relative;}.iw input{padding-right:44px;}
+    .tp{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-light);font-size:1rem;padding:4px;}
     .btn-login{width:100%;background:var(--blue);color:#fff;border:none;padding:14px;border-radius:99px;font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:all .25s;box-shadow:0 6px 20px rgba(37,99,235,0.3);margin-top:4px;}
     .btn-login:hover{background:var(--blue-light);transform:translateY(-2px);}
     .btn-login:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-    .login-error{display:none;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:var(--danger);border-radius:var(--radius-sm);padding:11px 14px;font-size:0.88rem;font-weight:500;margin-top:14px;text-align:center;}
-    .login-error.show{display:block;}
+    .lerr{display:none;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:var(--danger);border-radius:var(--radius-sm);padding:11px 14px;font-size:0.88rem;font-weight:500;margin-top:14px;text-align:center;}
+    .lerr.show{display:block;}
     .back-link{display:block;text-align:center;margin-top:20px;font-size:0.85rem;color:var(--text-muted);text-decoration:none;}
     .back-link:hover{color:var(--blue);}
 
     #adminPanel{display:none;}
-    .admin-nav{background:#fff;border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 20px rgba(37,99,235,0.06);position:sticky;top:0;z-index:50;}
-    .admin-nav-logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);display:flex;align-items:center;gap:8px;}
-    .admin-nav-logo span{color:var(--blue);}
-    .admin-badge{background:var(--blue-soft);border:1px solid rgba(37,99,235,0.2);color:var(--blue);font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:99px;}
-    .admin-nav-right{display:flex;align-items:center;gap:12px;}
-    .btn-view-site{display:inline-flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:8px 16px;border-radius:99px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .2s;}
-    .btn-view-site:hover{border-color:rgba(37,99,235,0.3);color:var(--blue);}
-    .btn-logout{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:var(--danger);padding:8px 16px;border-radius:99px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
-    .btn-logout:hover{background:rgba(239,68,68,0.18);}
-    .admin-body{max-width:1100px;margin:0 auto;padding:36px 24px;}
+    .anav{background:#fff;border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 20px rgba(37,99,235,0.06);position:sticky;top:0;z-index:50;}
+    .anav-logo{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);display:flex;align-items:center;gap:8px;}
+    .anav-logo span{color:var(--blue);}
+    .abadge{background:var(--blue-soft);border:1px solid rgba(37,99,235,0.2);color:var(--blue);font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:99px;}
+    .anav-r{display:flex;align-items:center;gap:12px;}
+    .btn-vs{display:inline-flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:8px 16px;border-radius:99px;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .2s;}
+    .btn-vs:hover{border-color:rgba(37,99,235,0.3);color:var(--blue);}
+    .btn-lo{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:var(--danger);padding:8px 16px;border-radius:99px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
+    .btn-lo:hover{background:rgba(239,68,68,0.18);}
+    .abody{max-width:1100px;margin:0 auto;padding:36px 24px;}
 
     .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px;}
-    .stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);}
-    .stat-num{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2rem;color:var(--blue);margin-bottom:4px;}
-    .stat-label{font-size:0.82rem;color:var(--text-muted);font-weight:500;}
+    .sc{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);}
+    .sn{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2rem;color:var(--blue);margin-bottom:4px;}
+    .sl{font-size:0.82rem;color:var(--text-muted);font-weight:500;}
 
-    .panel-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:28px;}
-    .panel-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);margin-bottom:22px;display:flex;align-items:center;gap:10px;}
-    .panel-title .ptag{font-size:0.72rem;font-weight:700;background:var(--blue-soft);color:var(--blue);border:1px solid rgba(37,99,235,0.18);padding:3px 10px;border-radius:99px;}
-    .add-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-    .add-form .full{grid-column:1/-1;}
-    .add-form .form-group{margin-bottom:0;}
-    .add-form input,.add-form textarea{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:0.95rem;padding:12px 14px;outline:none;width:100%;transition:all .2s;resize:vertical;}
-    .add-form input:focus,.add-form textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1);background:#fff;}
-    .add-form textarea{min-height:90px;}
-    .img-upload-area{border:2px dashed rgba(37,99,235,0.22);border-radius:var(--radius-sm);padding:28px;text-align:center;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;background:var(--bg);}
-    .img-upload-area:hover{border-color:var(--blue);background:rgba(37,99,235,0.04);}
-    .img-upload-area input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;}
-    .img-preview{width:100%;max-height:160px;object-fit:cover;border-radius:8px;display:none;margin-bottom:8px;}
-    .img-upload-icon{font-size:2rem;margin-bottom:6px;}
-    .img-upload-text{font-size:0.85rem;color:var(--text-light);}
-    .img-upload-name{font-size:0.82rem;color:var(--blue);font-weight:600;margin-top:6px;display:none;}
-    .form-actions{display:flex;gap:12px;align-items:center;grid-column:1/-1;margin-top:4px;}
-    .btn-publish{background:var(--blue);color:#fff;border:none;padding:13px 28px;border-radius:99px;font-family:'Inter',sans-serif;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all .25s;box-shadow:0 6px 20px rgba(37,99,235,0.3);display:flex;align-items:center;gap:9px;}
-    .btn-publish:hover{background:var(--blue-light);transform:translateY(-2px);}
-    .btn-publish:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-    .btn-clear{background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:13px 22px;border-radius:99px;font-family:'Inter',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all .2s;}
-    .btn-clear:hover{border-color:rgba(37,99,235,0.3);color:var(--text);}
+    .pc{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:28px;}
+    .pt{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+    .ptag{font-size:0.72rem;font-weight:700;background:var(--blue-soft);color:var(--blue);border:1px solid rgba(37,99,235,0.18);padding:3px 10px;border-radius:99px;}
+    .af{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .af .full{grid-column:1/-1;}.af .fg{margin-bottom:0;}
+    .af input,.af textarea{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:0.95rem;padding:12px 14px;outline:none;width:100%;transition:all .2s;resize:vertical;}
+    .af input:focus,.af textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1);background:#fff;}
+    .af textarea{min-height:90px;}
+    .upa{border:2px dashed rgba(37,99,235,0.22);border-radius:var(--radius-sm);padding:28px;text-align:center;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;background:var(--bg);}
+    .upa:hover{border-color:var(--blue);background:rgba(37,99,235,0.04);}
+    .upa input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+    .ipr{width:100%;max-height:160px;object-fit:cover;border-radius:8px;display:none;margin-bottom:8px;}
+    .upi{font-size:2rem;margin-bottom:6px;}.upt{font-size:0.85rem;color:var(--text-light);}
+    .upn{font-size:0.82rem;color:var(--blue);font-weight:600;margin-top:6px;display:none;}
+    .fa{display:flex;gap:12px;align-items:center;grid-column:1/-1;margin-top:4px;}
+    .btn-pub{background:var(--blue);color:#fff;border:none;padding:13px 28px;border-radius:99px;font-family:'Inter',sans-serif;font-weight:700;font-size:0.95rem;cursor:pointer;transition:all .25s;box-shadow:0 6px 20px rgba(37,99,235,0.3);display:flex;align-items:center;gap:9px;}
+    .btn-pub:hover{background:var(--blue-light);transform:translateY(-2px);}
+    .btn-pub:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+    .btn-cl{background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:13px 22px;border-radius:99px;font-family:'Inter',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all .2s;}
+    .btn-cl:hover{border-color:rgba(37,99,235,0.3);color:var(--text);}
 
-    .products-table{width:100%;border-collapse:collapse;}
-    .products-table th{text-align:left;font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;padding:0 16px 12px;border-bottom:1px solid var(--border);}
-    .products-table td{padding:14px 16px;border-bottom:1px solid rgba(37,99,235,0.07);vertical-align:middle;}
-    .products-table tr:last-child td{border-bottom:none;}
-    .products-table tr:hover td{background:var(--bg);}
-    .pt-thumb{width:52px;height:52px;border-radius:10px;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
-    .pt-thumb img{width:100%;height:100%;object-fit:cover;}
-    .pt-name{font-weight:600;font-size:0.92rem;color:var(--text);}
-    .pt-desc{font-size:0.8rem;color:var(--text-muted);margin-top:2px;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .pt-price{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1rem;color:var(--blue);}
-    .btn-delete{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);color:var(--danger);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;transition:all .2s;white-space:nowrap;}
-    .btn-delete:hover{background:rgba(239,68,68,0.18);}
-    .empty-admin{text-align:center;padding:48px 20px;color:var(--text-light);}
+    table{width:100%;border-collapse:collapse;}
+    th{text-align:left;font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;padding:0 16px 12px;border-bottom:1px solid var(--border);}
+    td{padding:14px 16px;border-bottom:1px solid rgba(37,99,235,0.07);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg);}
+    .thumb{width:52px;height:52px;border-radius:10px;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
+    .thumb img{width:100%;height:100%;object-fit:cover;}
+    .pname{font-weight:600;font-size:0.92rem;color:var(--text);}
+    .pdesc{font-size:0.8rem;color:var(--text-muted);margin-top:2px;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .pprice{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1rem;color:var(--blue);}
+    .btn-del{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.18);color:var(--danger);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;transition:all .2s;white-space:nowrap;}
+    .btn-del:hover{background:rgba(239,68,68,0.18);}
+    .empty{text-align:center;padding:48px 20px;color:var(--text-light);}
     .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--text);color:#fff;padding:12px 22px;border-radius:99px;font-size:0.88rem;font-weight:500;z-index:300;transition:transform .4s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,0.15);}
     .toast.show{transform:translateX(-50%) translateY(0);}
-
-    /* Setup screen */
-    #setupScreen{min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#eef2ff 0%,#e0eafe 50%,#f5f7ff 100%);}
-    .setup-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:40px 36px;width:100%;max-width:500px;box-shadow:0 24px 60px rgba(37,99,235,0.14);position:relative;z-index:2;}
-    .setup-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.3rem;color:var(--text);margin-bottom:8px;}
-    .setup-sub{font-size:0.88rem;color:var(--text-muted);margin-bottom:24px;line-height:1.6;}
-    .setup-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
-    .setup-step{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;font-size:0.88rem;line-height:1.6;}
-    .setup-step strong{color:var(--blue);}
-    .setup-step a{color:var(--blue);font-weight:600;}
-
-    @media(max-width:640px){
-      .login-card,.setup-card{padding:28px 22px;}
-      .add-form{grid-template-columns:1fr;}
-      .add-form .full{grid-column:auto;}
-      .admin-nav{padding:12px 18px;}
-      .admin-body{padding:24px 16px;}
-    }
+    @media(max-width:640px){.login-card{padding:28px 22px;}.af{grid-template-columns:1fr;}.af .full{grid-column:auto;}.anav{padding:12px 18px;}.abody{padding:24px 16px;}}
   </style>
 </head>
 <body>
 
-  <!-- SETUP (primera vez) -->
-  <div id="setupScreen" style="display:none">
-    <div class="login-blob lb1"></div>
-    <div class="login-blob lb2"></div>
-    <div class="setup-card">
-      <div class="setup-title">⚙️ Configuración inicial</div>
-      <p class="setup-sub">Para guardar productos en la nube necesitás crear una cuenta gratis en JSONBin.io. Solo tarda 2 minutos.</p>
-      <div class="setup-steps">
-        <div class="setup-step">
-          <strong>1.</strong> Andá a <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> y creá una cuenta gratis
-        </div>
-        <div class="setup-step">
-          <strong>2.</strong> Una vez dentro, clic en <strong>"API Keys"</strong> en el menú → copiá tu <strong>Master Key</strong>
-        </div>
-        <div class="setup-step">
-          <strong>3.</strong> Pegá la Master Key acá abajo y clic en "Guardar"
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Master Key de JSONBin</label>
-        <input type="text" id="setupKey" placeholder="$2a$10$..."/>
-      </div>
-      <button class="btn-login" onclick="saveSetup()">Guardar y continuar</button>
-      <div class="login-error" id="setupError"></div>
-    </div>
-  </div>
-
-  <!-- LOGIN -->
   <div id="loginScreen">
-    <div class="login-blob lb1"></div>
-    <div class="login-blob lb2"></div>
+    <div class="lb lb1"></div>
+    <div class="lb lb2"></div>
     <div class="login-card">
       <div class="login-logo"><div class="dot"></div>Electro<span>Service</span></div>
-      <p class="login-subtitle">Panel de <strong>administración</strong>. Solo uso del propietario.</p>
-      <div class="form-group">
-        <label>Usuario</label>
-        <input type="text" id="loginUser" placeholder="Ingresá tu usuario" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()"/>
-      </div>
-      <div class="form-group">
-        <label>Contraseña</label>
-        <div class="input-wrap">
-          <input type="password" id="loginPass" placeholder="Ingresá tu contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
-          <button class="toggle-pass" onclick="togglePass()" type="button">👁</button>
-        </div>
-      </div>
+      <p class="login-sub">Panel de <strong>administración</strong>. Solo uso del propietario.</p>
+      <div class="fg"><label>Usuario</label><input type="text" id="loginUser" placeholder="Ingresá tu usuario" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()"/></div>
+      <div class="fg"><label>Contraseña</label><div class="iw"><input type="password" id="loginPass" placeholder="Ingresá tu contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/><button class="tp" onclick="togglePass()" type="button">👁</button></div></div>
       <button class="btn-login" id="loginBtn" onclick="doLogin()">Iniciar sesión</button>
-      <div class="login-error" id="loginError"></div>
+      <div class="lerr" id="loginErr"></div>
       <a href="index.html" class="back-link">← Volver al sitio</a>
     </div>
   </div>
 
-  <!-- ADMIN PANEL -->
   <div id="adminPanel">
-    <nav class="admin-nav">
+    <nav class="anav">
       <div style="display:flex;align-items:center;gap:12px;">
-        <div class="admin-nav-logo">Electro<span>Service</span></div>
-        <span class="admin-badge">ADMIN</span>
+        <div class="anav-logo">Electro<span>Service</span></div>
+        <span class="abadge">ADMIN</span>
       </div>
-      <div class="admin-nav-right">
-        <a href="index.html" target="_blank" class="btn-view-site">🌐 Ver sitio</a>
-        <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+      <div class="anav-r">
+        <a href="index.html" target="_blank" class="btn-vs">🌐 Ver sitio</a>
+        <button class="btn-lo" onclick="doLogout()">Cerrar sesión</button>
       </div>
     </nav>
-    <div class="admin-body">
+    <div class="abody">
       <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-num" id="statTotal">–</div>
-          <div class="stat-label">Artículos publicados</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="statSession" style="font-size:1rem;padding-top:6px;">–</div>
-          <div class="stat-label">Sesión activa hasta</div>
-        </div>
+        <div class="sc"><div class="sn" id="statTotal">–</div><div class="sl">Artículos publicados</div></div>
+        <div class="sc"><div class="sn" id="statSess" style="font-size:1rem;padding-top:6px;">–</div><div class="sl">Sesión activa hasta</div></div>
       </div>
-
-      <div class="panel-card">
-        <div class="panel-title">➕ Agregar artículo <span class="ptag">NUEVO</span></div>
-        <div class="add-form">
-          <div class="form-group"><label>Nombre *</label><input type="text" id="pName" placeholder="Ej: Aire Split 3000 BTU reacondicionado"/></div>
-          <div class="form-group"><label>Precio (ARS) *</label><input type="number" id="pPrice" placeholder="Ej: 150000"/></div>
-          <div class="form-group full"><label>Descripción</label><textarea id="pDesc" placeholder="Marca, modelo, estado, garantía..."></textarea></div>
-          <div class="form-group full">
+      <div class="pc">
+        <div class="pt">➕ Agregar artículo <span class="ptag">NUEVO</span></div>
+        <div class="af">
+          <div class="fg"><label>Nombre *</label><input type="text" id="pName" placeholder="Ej: Aire Split 3000 BTU reacondicionado"/></div>
+          <div class="fg"><label>Precio (ARS) *</label><input type="number" id="pPrice" placeholder="Ej: 150000"/></div>
+          <div class="fg full"><label>Descripción</label><textarea id="pDesc" placeholder="Marca, modelo, estado, garantía..."></textarea></div>
+          <div class="fg full">
             <label>Imagen</label>
-            <div class="img-upload-area">
-              <input type="file" accept="image/*" id="pImg" onchange="previewImage(event)"/>
-              <img class="img-preview" id="imgPreview" alt="preview"/>
-              <div id="uploadPlaceholder"><div class="img-upload-icon">📷</div><div class="img-upload-text">Hacé clic o arrastrá una imagen</div></div>
-              <div class="img-upload-name" id="imgName"></div>
+            <div class="upa">
+              <input type="file" accept="image/*" id="pImg" onchange="previewImg(event)"/>
+              <img class="ipr" id="imgPrev" alt="preview"/>
+              <div id="upPh"><div class="upi">📷</div><div class="upt">Hacé clic o arrastrá una imagen</div></div>
+              <div class="upn" id="imgName"></div>
             </div>
           </div>
-          <div class="form-actions">
-            <button class="btn-publish" id="btnPublish" onclick="addProduct()">📦 Publicar artículo</button>
-            <button class="btn-clear" onclick="clearForm()">Limpiar</button>
+          <div class="fa">
+            <button class="btn-pub" id="btnPub" onclick="addProduct()">📦 Publicar artículo</button>
+            <button class="btn-cl" onclick="clearForm()">Limpiar</button>
           </div>
         </div>
       </div>
-
-      <div class="panel-card">
-        <div class="panel-title">📋 Artículos publicados</div>
-        <div id="adminProductList"><div class="spinner" style="margin:30px auto"></div></div>
+      <div class="pc">
+        <div class="pt">📋 Artículos publicados</div>
+        <div id="productList"><div class="spinner" style="margin:30px auto"></div></div>
       </div>
     </div>
   </div>
@@ -234,336 +160,151 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    // ═══════════════════════════════════════════
-    // JSONBIN.IO — base de datos gratuita en la nube
-    // No requiere configuración de reglas ni permisos
-    // ═══════════════════════════════════════════
-    const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
-    const BIN_NAME     = 'electroservice-products';
+    // ══ SUPABASE CONFIG ══
+    const SB_URL = 'https://uxognhhfnfqgrtwegqdz.supabase.co';
+    const SB_KEY = 'sb_publishable_y06w58G7KH2xzuE80lqHfQ_3NpX_16Y';
+    const API    = `${SB_URL}/rest/v1/products`;
+    const HEADS  = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
 
-    // Credenciales admin (SHA-256)
+    // ══ CREDENCIALES ADMIN (SHA-256) ══
     // Usuario: admin | Contraseña: electroservice2025
     const CREDS = {
       user: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
       pass: '717c26e88f94d2b2f13a2c5457cc2b77ac11c2b18f62b78ea7294d47b3acbe94'
     };
-    const SESSION_KEY      = 'eso_admin_session';
-    const SESSION_DURATION = 2 * 60 * 60 * 1000;
-    const SETUP_KEY        = 'eso_jsonbin_key';
-    const BIN_ID_KEY       = 'eso_jsonbin_bin';
+    const SK = 'eso_sess'; const SD = 2*60*60*1000;
+    let fails=0, lockUntil=0;
 
-    let failedAttempts = 0;
-    let lockUntil      = 0;
+    async function sha256(s){ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)); return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join(''); }
+    function mkSess(){ const e=Date.now()+SD; sessionStorage.setItem(SK,JSON.stringify({e})); return e; }
+    function getSess(){ try{ const s=JSON.parse(sessionStorage.getItem(SK)); if(!s||Date.now()>s.e){sessionStorage.removeItem(SK);return null;} return s; }catch{return null;} }
+    function loggedIn(){ return !!getSess(); }
 
-    // ── CRYPTO ──
-    async function sha256(str) {
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    // ══ SUPABASE HELPERS ══
+    async function sbGet(){
+      const r=await fetch(`${API}?order=created_at.desc`,{headers:HEADS});
+      if(!r.ok){ const e=await r.json(); throw new Error(e.message||'Error al leer'); }
+      return r.json();
+    }
+    async function sbInsert(data){
+      const r=await fetch(API,{method:'POST',headers:HEADS,body:JSON.stringify(data)});
+      if(!r.ok){ const e=await r.json(); throw new Error(e.message||'Error al guardar'); }
+      return r.json();
+    }
+    async function sbDelete(id){
+      const r=await fetch(`${API}?id=eq.${id}`,{method:'DELETE',headers:HEADS});
+      if(!r.ok){ const e=await r.json(); throw new Error(e.message||'Error al eliminar'); }
     }
 
-    // ── SESSION ──
-    function createSession() {
-      const exp = Date.now() + SESSION_DURATION;
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ expires: exp }));
-      return exp;
-    }
-    function getSession() {
-      try {
-        const s = JSON.parse(sessionStorage.getItem(SESSION_KEY));
-        if (!s || Date.now() > s.expires) { sessionStorage.removeItem(SESSION_KEY); return null; }
-        return s;
-      } catch { return null; }
-    }
-    function isLoggedIn() { return !!getSession(); }
-
-    // ── JSONBIN API ──
-    function getApiKey()  { return localStorage.getItem(SETUP_KEY); }
-    function getBinId()   { return localStorage.getItem(BIN_ID_KEY); }
-
-    async function jsonbinGet() {
-      const binId = getBinId();
-      if (!binId) return [];
-      const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, {
-        headers: { 'X-Master-Key': getApiKey() }
-      });
-      if (!res.ok) throw new Error('Error al leer datos');
-      const data = await res.json();
-      return data.record?.products || [];
-    }
-
-    async function jsonbinSave(products) {
-      const binId = getBinId();
-      const res = await fetch(`${JSONBIN_BASE}/b/${binId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': getApiKey()
-        },
-        body: JSON.stringify({ products })
-      });
-      if (!res.ok) throw new Error('Error al guardar datos');
-      return res.json();
-    }
-
-    async function jsonbinCreate() {
-      const res = await fetch(`${JSONBIN_BASE}/b`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': getApiKey(),
-          'X-Bin-Name': BIN_NAME,
-          'X-Bin-Private': 'false'
-        },
-        body: JSON.stringify({ products: [] })
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || 'Error al crear base de datos');
-      }
-      const data = await res.json();
-      return data.metadata.id;
-    }
-
-    // ── SETUP ──
-    async function saveSetup() {
-      const key = document.getElementById('setupKey').value.trim();
-      if (!key) { showSetupError('Pegá tu Master Key de JSONBin'); return; }
-
-      const btn = document.querySelector('#setupScreen .btn-login');
-      btn.textContent = 'Verificando...'; btn.disabled = true;
-
-      try {
-        // Guardar key
-        localStorage.setItem(SETUP_KEY, key);
-
-        // Buscar si ya existe un bin con ese nombre
-        const listRes = await fetch(`${JSONBIN_BASE}/b?private=false`, {
-          headers: { 'X-Master-Key': key }
-        });
-
-        let binId = null;
-
-        if (listRes.ok) {
-          const bins = await listRes.json();
-          const existing = bins.find(b => b.snippetMeta?.name === BIN_NAME);
-          if (existing) binId = existing.snippetMeta.id;
-        }
-
-        // Si no existe, crear uno nuevo
-        if (!binId) {
-          const createRes = await fetch(`${JSONBIN_BASE}/b`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Master-Key': key,
-              'X-Bin-Name': BIN_NAME,
-              'X-Bin-Private': 'false'
-            },
-            body: JSON.stringify({ products: [] })
-          });
-          if (!createRes.ok) {
-            const e = await createRes.json();
-            throw new Error(e.message || 'API Key inválida');
-          }
-          const created = await createRes.json();
-          binId = created.metadata.id;
-        }
-
-        localStorage.setItem(BIN_ID_KEY, binId);
-        document.getElementById('setupScreen').style.display = 'none';
-        document.getElementById('loginScreen').style.display = 'flex';
-        showToast('✅ Base de datos configurada correctamente');
-
-      } catch(e) {
-        showSetupError('❌ ' + e.message + '. Verificá tu API Key.');
-        localStorage.removeItem(SETUP_KEY);
-      }
-
-      btn.textContent = 'Guardar y continuar'; btn.disabled = false;
-    }
-
-    function showSetupError(msg) {
-      const el = document.getElementById('setupError');
-      el.textContent = msg; el.classList.add('show');
-    }
-
-    // ── LOGIN ──
-    async function doLogin() {
-      if (Date.now() < lockUntil) {
-        const s = Math.ceil((lockUntil - Date.now()) / 1000);
-        showLoginError(`⏳ Bloqueado. Esperá ${s} segundos.`); return;
-      }
-      const userVal = document.getElementById('loginUser').value.trim();
-      const passVal = document.getElementById('loginPass').value;
-      if (!userVal || !passVal) { showLoginError('Completá usuario y contraseña.'); return; }
-
-      const btn = document.getElementById('loginBtn');
-      btn.textContent = 'Verificando...'; btn.disabled = true;
-      const [uh, ph] = await Promise.all([sha256(userVal), sha256(passVal)]);
-      btn.textContent = 'Iniciar sesión'; btn.disabled = false;
-
-      if (uh === CREDS.user && ph === CREDS.pass) {
-        failedAttempts = 0;
-        document.getElementById('loginError').classList.remove('show');
-        showAdminPanel(createSession());
+    // ══ LOGIN ══
+    async function doLogin(){
+      if(Date.now()<lockUntil){ showErr(`⏳ Bloqueado. Esperá ${Math.ceil((lockUntil-Date.now())/1000)}s`); return; }
+      const u=document.getElementById('loginUser').value.trim();
+      const p=document.getElementById('loginPass').value;
+      if(!u||!p){ showErr('Completá usuario y contraseña.'); return; }
+      const btn=document.getElementById('loginBtn');
+      btn.textContent='Verificando...'; btn.disabled=true;
+      const [uh,ph]=await Promise.all([sha256(u),sha256(p)]);
+      btn.textContent='Iniciar sesión'; btn.disabled=false;
+      if(uh===CREDS.user&&ph===CREDS.pass){
+        fails=0; document.getElementById('loginErr').classList.remove('show');
+        showPanel(mkSess());
       } else {
-        failedAttempts++;
-        if (failedAttempts >= 5)      lockUntil = Date.now() + 120000;
-        else if (failedAttempts >= 4) lockUntil = Date.now() + 30000;
-        else if (failedAttempts >= 3) lockUntil = Date.now() + 10000;
-        document.getElementById('loginPass').value = '';
-        showLoginError(`❌ Credenciales incorrectas. Intento ${failedAttempts}/5`);
+        fails++;
+        if(fails>=5) lockUntil=Date.now()+120000;
+        else if(fails>=4) lockUntil=Date.now()+30000;
+        else if(fails>=3) lockUntil=Date.now()+10000;
+        document.getElementById('loginPass').value='';
+        showErr(`❌ Credenciales incorrectas. Intento ${fails}/5`);
       }
     }
+    function showErr(m){ const e=document.getElementById('loginErr'); e.textContent=m; e.classList.add('show'); }
+    function doLogout(){ sessionStorage.removeItem(SK); document.getElementById('adminPanel').style.display='none'; document.getElementById('loginScreen').style.display='flex'; document.getElementById('loginUser').value=''; document.getElementById('loginPass').value=''; document.getElementById('loginErr').classList.remove('show'); }
+    function togglePass(){ const i=document.getElementById('loginPass'); i.type=i.type==='password'?'text':'password'; }
 
-    function showLoginError(msg) {
-      const el = document.getElementById('loginError');
-      el.textContent = msg; el.classList.add('show');
-    }
-
-    function doLogout() {
-      sessionStorage.removeItem(SESSION_KEY);
-      document.getElementById('adminPanel').style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('loginUser').value = '';
-      document.getElementById('loginPass').value = '';
-      document.getElementById('loginError').classList.remove('show');
-    }
-
-    function togglePass() {
-      const i = document.getElementById('loginPass');
-      i.type = i.type === 'password' ? 'text' : 'password';
-    }
-
-    // ── ADMIN PANEL ──
-    function showAdminPanel(expTs) {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminPanel').style.display  = 'block';
-      document.getElementById('statSession').textContent =
-        new Date(expTs).toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' });
+    // ══ PANEL ══
+    function showPanel(exp){
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('adminPanel').style.display='block';
+      document.getElementById('statSess').textContent=new Date(exp).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
       loadProducts();
     }
 
-    async function loadProducts() {
-      document.getElementById('adminProductList').innerHTML =
-        '<div style="text-align:center;padding:30px"><div class="spinner"></div></div>';
-      try {
-        const products = await jsonbinGet();
-        document.getElementById('statTotal').textContent = products.length;
-        renderAdminProducts(products);
-      } catch(e) {
-        document.getElementById('adminProductList').innerHTML =
-          `<div class="empty-admin"><p style="color:var(--danger)">⚠️ ${e.message}</p></div>`;
+    async function loadProducts(){
+      document.getElementById('productList').innerHTML='<div style="text-align:center;padding:30px"><div class="spinner"></div></div>';
+      try{
+        const products=await sbGet();
+        document.getElementById('statTotal').textContent=products.length;
+        renderProducts(products);
+      }catch(e){
+        document.getElementById('productList').innerHTML=`<div class="empty"><p style="color:var(--danger)">⚠️ ${e.message}</p></div>`;
       }
     }
 
-    function renderAdminProducts(products) {
-      const c = document.getElementById('adminProductList');
-      if (!products.length) {
-        c.innerHTML = `<div class="empty-admin"><p>No hay artículos publicados todavía.</p></div>`; return;
-      }
-      c.innerHTML = `<table class="products-table">
-        <thead><tr>
-          <th style="width:60px"></th><th>Artículo</th><th>Precio</th><th style="width:110px"></th>
-        </tr></thead>
-        <tbody>${products.map((p,i) => `
-          <tr>
-            <td><div class="pt-thumb">${p.img?`<img src="${p.img}" alt="${p.name}"/>`:'📦'}</div></td>
-            <td><div class="pt-name">${p.name}</div><div class="pt-desc">${p.desc||'–'}</div></td>
-            <td><span class="pt-price">$${Number(p.price).toLocaleString('es-AR')}</span></td>
-            <td><button class="btn-delete" onclick="deleteProduct(${i})">🗑 Eliminar</button></td>
-          </tr>`).join('')}
-        </tbody></table>`;
+    function renderProducts(products){
+      const c=document.getElementById('productList');
+      if(!products.length){ c.innerHTML=`<div class="empty"><p>No hay artículos publicados todavía.</p></div>`; return; }
+      c.innerHTML=`<table><thead><tr><th style="width:60px"></th><th>Artículo</th><th>Precio</th><th style="width:110px"></th></tr></thead><tbody>
+        ${products.map(p=>`<tr>
+          <td><div class="thumb">${p.img?`<img src="${p.img}" alt="${p.name}"/>`:'📦'}</div></td>
+          <td><div class="pname">${p.name}</div><div class="pdesc">${p.description||'–'}</div></td>
+          <td><span class="pprice">$${Number(p.price).toLocaleString('es-AR')}</span></td>
+          <td><button class="btn-del" onclick="deleteProduct('${p.id}')">🗑 Eliminar</button></td>
+        </tr>`).join('')}
+      </tbody></table>`;
     }
 
-    async function deleteProduct(index) {
-      if (!isLoggedIn()) { doLogout(); return; }
-      if (!confirm('¿Eliminar este artículo?')) return;
-      try {
-        const products = await jsonbinGet();
-        products.splice(index, 1);
-        await jsonbinSave(products);
-        showToast('🗑 Artículo eliminado');
-        loadProducts();
-      } catch(e) { showToast('❌ ' + e.message); }
+    async function deleteProduct(id){
+      if(!loggedIn()){ doLogout(); return; }
+      if(!confirm('¿Eliminar este artículo?')) return;
+      try{ await sbDelete(id); showToast('🗑 Artículo eliminado'); loadProducts(); }
+      catch(e){ showToast('❌ '+e.message); }
     }
 
-    async function addProduct() {
-      if (!isLoggedIn()) { doLogout(); return; }
-      const name    = document.getElementById('pName').value.trim();
-      const desc    = document.getElementById('pDesc').value.trim();
-      const price   = document.getElementById('pPrice').value.trim();
-      const preview = document.getElementById('imgPreview');
-      const hasImg  = preview.style.display !== 'none';
-      if (!name || !price) { showToast('⚠️ Completá nombre y precio'); return; }
-      if (hasImg && preview.src.length > 500000) {
-        showToast('⚠️ La imagen es muy grande. Usá una foto más chica.'); return;
-      }
-      const btn = document.getElementById('btnPublish');
-      btn.textContent = 'Publicando...'; btn.disabled = true;
-      try {
-        const products = await jsonbinGet();
-        products.unshift({ name, desc, price, img: hasImg ? preview.src : '', id: Date.now() });
-        await jsonbinSave(products);
-        clearForm();
-        showToast('✅ Artículo publicado — visible en todo el mundo');
-        loadProducts();
-      } catch(e) { showToast('❌ ' + e.message); }
-      btn.textContent = '📦 Publicar artículo'; btn.disabled = false;
+    async function addProduct(){
+      if(!loggedIn()){ doLogout(); return; }
+      const name=document.getElementById('pName').value.trim();
+      const description=document.getElementById('pDesc').value.trim();
+      const price=document.getElementById('pPrice').value.trim();
+      const prev=document.getElementById('imgPrev');
+      const hasImg=prev.style.display!=='none';
+      if(!name||!price){ showToast('⚠️ Completá nombre y precio'); return; }
+      if(hasImg&&prev.src.length>900000){ showToast('⚠️ Imagen muy grande. Usá una foto más chica.'); return; }
+      const btn=document.getElementById('btnPub');
+      btn.textContent='Publicando...'; btn.disabled=true;
+      try{
+        await sbInsert({name, description, price, img: hasImg?prev.src:''});
+        clearForm(); showToast('✅ Artículo publicado — visible globalmente'); loadProducts();
+      }catch(e){ showToast('❌ '+e.message); }
+      btn.textContent='📦 Publicar artículo'; btn.disabled=false;
     }
 
-    function clearForm() {
-      ['pName','pDesc','pPrice'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('pImg').value = '';
-      document.getElementById('imgPreview').style.display = 'none';
-      document.getElementById('uploadPlaceholder').style.display = 'block';
-      document.getElementById('imgName').style.display = 'none';
+    function clearForm(){
+      ['pName','pDesc','pPrice'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('pImg').value='';
+      document.getElementById('imgPrev').style.display='none';
+      document.getElementById('upPh').style.display='block';
+      document.getElementById('imgName').style.display='none';
     }
 
-    function previewImage(e) {
-      const file = e.target.files[0]; if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const p = document.getElementById('imgPreview');
-        p.src = ev.target.result; p.style.display = 'block';
-        document.getElementById('uploadPlaceholder').style.display = 'none';
-        const n = document.getElementById('imgName');
-        n.textContent = '📎 ' + file.name; n.style.display = 'block';
+    function previewImg(e){
+      const file=e.target.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        const p=document.getElementById('imgPrev');
+        p.src=ev.target.result; p.style.display='block';
+        document.getElementById('upPh').style.display='none';
+        const n=document.getElementById('imgName');
+        n.textContent='📎 '+file.name; n.style.display='block';
       };
       reader.readAsDataURL(file);
     }
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3500);
-    }
+    function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
 
-    setInterval(() => {
-      if (document.getElementById('adminPanel').style.display === 'block' && !isLoggedIn()) {
-        showToast('⏰ Sesión expirada.'); doLogout();
-      }
-    }, 60000);
+    setInterval(()=>{ if(document.getElementById('adminPanel').style.display==='block'&&!loggedIn()){ showToast('⏰ Sesión expirada.'); doLogout(); } },60000);
 
-    // ── INIT ──
-    function init() {
-      const hasKey   = !!localStorage.getItem(SETUP_KEY);
-      const hasBin   = !!localStorage.getItem(BIN_ID_KEY);
-      const session  = getSession();
-
-      if (!hasKey || !hasBin) {
-        // Primera vez: mostrar setup
-        document.getElementById('loginScreen').style.display  = 'none';
-        document.getElementById('setupScreen').style.display  = 'flex';
-      } else if (session) {
-        // Sesión activa: ir directo al panel
-        document.getElementById('loginScreen').style.display = 'none';
-        showAdminPanel(session.expires);
-      }
-      // Si hay key pero no sesión: mostrar login (default)
-    }
-
-    init();
+    const s=getSess(); if(s) showPanel(s.e);
   </script>
 </body>
 </html>

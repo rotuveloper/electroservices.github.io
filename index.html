@@ -455,94 +455,31 @@
   </div>
   <div class="toast" id="toast"></div>
 
-  <!-- ══ REST API — sin SDK ══ -->
   <script>
-    const _PROJECT = 'electroservice-3991b';
-    const _APIKEY  = 'AIzaSyDrQMOo86Vu0e5B2wedQswWQzkI5gZDzMA';
-    const _BASE    = `https://firestore.googleapis.com/v1/projects/${_PROJECT}/databases/(default)/documents`;
-
-    function fromDoc(doc) {
-      const out = { id: doc.name.split('/').pop(), _created: doc.createTime || '' };
-      for (const [k, v] of Object.entries(doc.fields || {})) {
-        out[k] = v.stringValue ?? v.integerValue ?? '';
-      }
-      return out;
-    }
-
-    function renderProducts(products) {
-      const grid = document.getElementById('productsGrid');
-      if (!products.length) {
-        grid.innerHTML = `<div class="empty-store"><div class="es-icon">📦</div><p>No hay artículos publicados todavía.<br>Volvé pronto.</p></div>`;
-        return;
-      }
-      grid.innerHTML = products.map(p => `
-        <div class="product-card">
-          <div class="product-img">${p.img ? `<img src="${p.img}" alt="${p.name}" loading="lazy"/>` : '📦'}</div>
-          <div class="product-body">
-            <div class="product-name">${p.name}</div>
-            <div class="product-desc">${p.desc || ''}</div>
-            <div class="product-price">$${Number(p.price).toLocaleString('es-AR')}</div>
-            <div class="product-actions">
-              <button class="btn-wa-product" onclick="inquireProduct('${p.name.replace(/'/g,"\\'")}','${p.price}')">Consultar</button>
-            </div>
-          </div>
-        </div>`).join('');
-    }
+    const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
+    const SETUP_KEY    = 'eso_jsonbin_key';
+    const BIN_ID_KEY   = 'eso_jsonbin_bin';
 
     async function loadProducts() {
+      const binId  = localStorage.getItem(BIN_ID_KEY);
+      const apiKey = localStorage.getItem(SETUP_KEY);
+      const grid   = document.getElementById('productsGrid');
+      if (!binId || !apiKey) { grid.innerHTML = `<div class="empty-store"><div class="es-icon">📦</div><p>No hay artículos todavía.</p></div>`; return; }
       try {
-        const res  = await fetch(`${_BASE}/products?key=${_APIKEY}&pageSize=200`);
+        const res  = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, { headers: { 'X-Master-Key': apiKey } });
         const data = await res.json();
-        const docs = (data.documents || []).map(fromDoc)
-          .sort((a,b) => b._created.localeCompare(a._created));
-        renderProducts(docs);
-      } catch {
-        document.getElementById('productsGrid').innerHTML =
-          `<div class="empty-store"><div class="es-icon">📦</div><p>No hay artículos publicados todavía.</p></div>`;
-      }
+        const products = data.record?.products || [];
+        if (!products.length) { grid.innerHTML = `<div class="empty-store"><div class="es-icon">📦</div><p>No hay artículos publicados todavía.</p></div>`; return; }
+        grid.innerHTML = products.map(p => `<div class="product-card"><div class="product-img">${p.img?`<img src="${p.img}" alt="${p.name}" loading="lazy"/>`:'📦'}</div><div class="product-body"><div class="product-name">${p.name}</div><div class="product-desc">${p.desc||''}</div><div class="product-price">$${Number(p.price).toLocaleString('es-AR')}</div><div class="product-actions"><button class="btn-wa-product" onclick="inquireProduct('${p.name.replace(/'/g,"\\'")}','${p.price}')">💬 Consultar</button></div></div></div>`).join('');
+      } catch { grid.innerHTML = `<div class="empty-store"><div class="es-icon">📦</div><p>No hay artículos publicados todavía.</p></div>`; }
     }
-
-    // Recargar cada 30 segundos para ver artículos nuevos
-    loadProducts();
-    setInterval(loadProducts, 30000);
-
-    window.inquireProduct = function(name, price) {
-      const text = `Hola! Me interesa el artículo: *${name}* ($${Number(price).toLocaleString('es-AR')}). ¿Está disponible?`;
-      window.open(`https://wa.me/5491151095053?text=${encodeURIComponent(text)}`, '_blank');
-    };
-
-    function toggleMenu(){
-      document.getElementById('hamburger').classList.toggle('open');
-      document.getElementById('mobileMenu').classList.toggle('open');
-    }
-
-    ['❄️','🔧','💡','🧊','💨','⚡','🫧','🔌'].forEach(ic=>{
-      const el=document.createElement('div');
-      el.className='fi';el.textContent=ic;
-      el.style.cssText=`left:${10+Math.random()*80}%;animation-duration:${14+Math.random()*12}s;animation-delay:${-Math.random()*14}s;font-size:${1.4+Math.random()*1.4}rem;`;
-      document.getElementById('floatIcons').appendChild(el);
-    });
-
-    const obs=new IntersectionObserver(entries=>{
-      entries.forEach((e,i)=>{if(e.isIntersecting){e.target.style.transitionDelay=(i%4)*0.07+'s';e.target.classList.add('visible');}});
-    },{threshold:0.08});
-    document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
-
-    function showToast(msg){
-      const t=document.getElementById('toast');
-      t.textContent=msg;t.classList.add('show');
-      setTimeout(()=>t.classList.remove('show'),3000);
-    }
-
-    function sendWhatsApp(){
-      const name=document.getElementById('cName').value.trim();
-      const phone=document.getElementById('cPhone').value.trim();
-      const service=document.getElementById('cService').value;
-      const msg=document.getElementById('cMsg').value.trim();
-      if(!name||!service){showToast('⚠️ Completá tu nombre y el servicio');return;}
-      const text=`Hola! Soy ${name}${phone?` (${phone})`:''}. Necesito: *${service}*. ${msg}`;
-      window.open(`https://wa.me/5491151095053?text=${encodeURIComponent(text)}`,'_blank');
-    }
+    loadProducts(); setInterval(loadProducts, 30000);
+    window.inquireProduct = function(name,price){ window.open(`https://wa.me/5491151095053?text=${encodeURIComponent(`Hola! Me interesa: *${name}* ($${Number(price).toLocaleString('es-AR')}). ¿Está disponible?`)}`,'_blank'); };
+    function toggleMenu(){ document.getElementById('hamburger').classList.toggle('open'); document.getElementById('mobileMenu').classList.toggle('open'); }
+    ['❄️','🔧','💡','🧊','💨','⚡','🫧','🔌'].forEach(ic=>{ const el=document.createElement('div'); el.className='fi'; el.textContent=ic; el.style.cssText=`left:${10+Math.random()*80}%;animation-duration:${14+Math.random()*12}s;animation-delay:${-Math.random()*14}s;font-size:${1.4+Math.random()*1.4}rem;`; document.getElementById('floatIcons').appendChild(el); });
+    const obs=new IntersectionObserver(entries=>{ entries.forEach((e,i)=>{ if(e.isIntersecting){ e.target.style.transitionDelay=(i%4)*0.07+'s'; e.target.classList.add('visible'); } }); },{threshold:0.08}); document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+    function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+    function sendWhatsApp(){ const name=document.getElementById('cName').value.trim(); const phone=document.getElementById('cPhone').value.trim(); const service=document.getElementById('cService').value; const msg=document.getElementById('cMsg').value.trim(); if(!name||!service){showToast('⚠️ Completá tu nombre y el servicio');return;} window.open(`https://wa.me/5491151095053?text=${encodeURIComponent(`Hola! Soy ${name}${phone?` (${phone})`:''}. Necesito: *${service}*. ${msg}`)}`,'_blank'); }
   </script>
 </body>
 </html>
